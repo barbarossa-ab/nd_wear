@@ -146,7 +146,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
             mTime = new Time();
 
-            mImageDimen = dpToPx((int)getResources().getDimension(R.dimen.weather_icon_size));
+            mImageDimen = getResources().getDimensionPixelSize(R.dimen.weather_icon_size);
 
             mIcon = getImage(R.drawable.art_clear, mImageDimen, mImageDimen);
         }
@@ -164,6 +164,19 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             paint.setAntiAlias(true);
             paint.setTextSize(size);
             paint.setTextAlign(align);
+            return paint;
+        }
+
+        private Paint createImagePaint() {
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            return paint;
+        }
+
+        private Paint createLinePaint() {
+            Paint paint = new Paint();
+            paint.setColor(getResources().getColor(R.color.digital_text_faded));
+            paint.setAntiAlias(true);
             return paint;
         }
 
@@ -260,8 +273,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             String maxTempText = String.format("%d°", mMaxTemp);
             String minTempText = String.format("%d°", mMinTemp);
 
-            int weatherSpacing = dpToPx((int)getResources().getDimension(R.dimen.weather_spacing));
-            int weatherTextSpacing = dpToPx((int)getResources().getDimension(R.dimen.weather_text_spacing));
+            int weatherSpacing = getResources().getDimensionPixelSize(R.dimen.weather_spacing);
+            int weatherTextSpacing = getResources().getDimensionPixelSize(R.dimen.weather_text_spacing);
 
             float tempZoneWidth = mMaxTempTextPaint.measureText(maxTempText)
                     + mMinTempTextPaint.measureText(minTempText)
@@ -273,24 +286,35 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             float minTempXOffset;
             float minTempYOffset;
 
-            float textSize = dpToPx((int)getResources().getDimension(R.dimen.weather_text_size));
+            int textSize = getResources().getDimensionPixelSize(R.dimen.weather_text_size);
 
             if (!isInAmbientMode()) {
-                float iconXOffset = (bounds.width() / 2f) - (tempZoneWidth / 2);
-                float iconYOffset = (0.6f * bounds.height()) - (mImageDimen / 2);
+                // Draw the weather icon
+                float iconXOffset = (0.5f * bounds.width()) - (0.5f * tempZoneWidth);
+                float iconYOffset = (0.6f * bounds.height()) - (0.5f * mImageDimen);
+                canvas.drawBitmap(mIcon, iconXOffset, iconYOffset, createImagePaint());
 
+                // Calculate offsets for weather text
                 maxTempXOffset = iconXOffset + mImageDimen + weatherSpacing;
                 maxTempYOffset = iconYOffset
-                        + (mImageDimen / 2f)
-                        + (textSize * 0.25f);
+                        + (0.5f * mImageDimen)
+                        + (0.3f * textSize);
 
                 minTempXOffset = maxTempXOffset + mMaxTempTextPaint.measureText(maxTempText) + weatherTextSpacing;
                 minTempYOffset = maxTempYOffset;
 
-                canvas.drawBitmap(mIcon, iconXOffset, iconYOffset, null);
-
+                // Draw line between texts
+//                int lineSize = getResources().getDimensionPixelSize(R.dimen.line_size);
+//                canvas.drawLine(
+//                        bounds.centerX() - (lineSize / 2),
+//                        ((maxTempYOffset - textSize) + timeYOffset) / 2,
+//                        bounds.centerX() + (lineSize / 2),
+//                        ((maxTempYOffset - textSize) + timeYOffset) / 2,
+//                        createLinePaint()
+//                );
             } else {
-                maxTempXOffset = (bounds.width() / 2f) - (tempZoneWidth / 2);
+                // Compute offsets
+                maxTempXOffset = (0.5f * bounds.width()) - (0.5f * tempZoneWidth);
                 maxTempYOffset = 0.6f * bounds.height();
                 minTempXOffset = maxTempXOffset + mMaxTempTextPaint.measureText(maxTempText) + weatherTextSpacing;
                 minTempYOffset = maxTempYOffset;
@@ -332,10 +356,5 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             }
         }
 
-        public int dpToPx(int dp) {
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-            return px;
-        }
     }
 }
