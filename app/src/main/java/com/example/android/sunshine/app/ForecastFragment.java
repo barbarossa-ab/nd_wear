@@ -421,7 +421,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                         break;
                     default:
                         if (!Utility.isNetworkAvailable(getActivity())) {
-                            message = R.string.empty_forecast_list_no_network;
+                             message = R.string.empty_forecast_list_no_network;
                         }
                 }
                 tv.setText(message);
