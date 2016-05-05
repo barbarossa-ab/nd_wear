@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Wear</string>
     <string name="my_digital_name">Sunshine</string>
 </resources>
