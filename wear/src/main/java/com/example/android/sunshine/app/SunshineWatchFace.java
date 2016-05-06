@@ -337,10 +337,11 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
             int textSize = getResources().getDimensionPixelSize(R.dimen.weather_text_size);
 
-            if (!isInAmbientMode()) {
+            if (!isInAmbientMode() && mIcon != null) {
                 // Draw the weather icon
                 float iconXOffset = (0.5f * bounds.width()) - (0.5f * tempZoneWidth);
                 float iconYOffset = (0.6f * bounds.height()) - (0.5f * mImageDimen);
+
                 canvas.drawBitmap(mIcon, iconXOffset, iconYOffset, createImagePaint());
 
                 // Calculate offsets for weather text

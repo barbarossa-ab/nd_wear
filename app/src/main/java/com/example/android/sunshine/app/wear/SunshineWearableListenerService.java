@@ -40,6 +40,7 @@ public class SunshineWearableListenerService extends WearableListenerService
     private static final String IMAGE_KEY = "image";
     private static final String MAX_TEMP_KEY = "max-temp";
     private static final String MIN_TEMP_KEY = "min-temp";
+    private static final String TIMESTAMP_KEY = "timestamp";
 
     private static final String[] NOTIFY_WEATHER_PROJECTION = new String[] {
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
@@ -121,6 +122,8 @@ public class SunshineWearableListenerService extends WearableListenerService
             Asset imageAsset = createAssetFromBitmap(image);
             dataMap.getDataMap().putAsset(IMAGE_KEY, imageAsset);
 
+            dataMap.getDataMap().putLong(TIMESTAMP_KEY, System.currentTimeMillis());
+
             PutDataRequest request = dataMap.asPutDataRequest();
             request.setUrgent();
 
@@ -132,6 +135,8 @@ public class SunshineWearableListenerService extends WearableListenerService
                                     .isSuccess());
                         }
                     });
+
+
         }
     }
 
